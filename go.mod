@@ -1,4 +1,4 @@
-module tageedto
+module github.com/junjl1/tagee-dto
 
 go 1.22.2
 
