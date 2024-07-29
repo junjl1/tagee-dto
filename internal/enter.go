@@ -1,14 +1,13 @@
 package internal
 
 import (
-	"fmt"
-	"github.com/junjl1/tagee-dto/fetcher"
+	"github.com/junjl1/tagee-dto/gen"
 )
 
 func GenTask(tageeCode string) {
-	data, err := fetcher.Fetch(tageeCode)
-	if err != nil {
-		return
-	}
-	fmt.Println(data)
+	//data, err := fetcher.Fetch(tageeCode)
+	//if err != nil {
+	//	return
+	//}
+	gen.GenDto()
 }
