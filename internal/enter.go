@@ -5,6 +5,7 @@ import (
 	"github.com/junjl1/tagee-dto/convertor"
 	"github.com/junjl1/tagee-dto/fetcher"
 	"github.com/junjl1/tagee-dto/gen"
+	"github.com/junjl1/tagee-dto/types"
 	"strings"
 )
 
@@ -13,21 +14,25 @@ func GenTask(tageeCode string) {
 	if err != nil {
 		return
 	}
-	g := gen.NewGenerator("myPkgName")
-	input := data.InputParam
-	for idx := len(input) - 1; idx >= 0; idx-- {
-		if idx == 0 && input[idx].Key == "root" {
+	genSubTask("dto", "req.go", data.InputParam)
+	genSubTask("dto", "res.go", data.OutputParam)
+}
+
+func genSubTask(pkgName string, fileName string, data []types.ParamDTO) {
+	g := gen.NewGenerator(pkgName)
+	for idx := len(data) - 1; idx >= 0; idx-- {
+		if idx == 0 && data[idx].Key == "root" {
 			continue
 		}
-		parts := strings.Split(input[idx].Key, ".")
+		parts := strings.Split(data[idx].Key, ".")
 		structName := parts[len(parts)-1]
-		for _, dto := range input[idx].DetailList {
-			t := convertor.NewConvertor(dto.Name, dto.Type)
-			g.AppendField(structName, t.GetGoFieldName(), dto.Name, t.GetGoType(), dto.Comment)
+		for _, dto := range data[idx].DetailList {
+			c := convertor.NewConvertor(dto.Name, dto.Type)
+			g.AppendField(structName, c.GetGoFieldName(), dto.Name, c.GetGoType(), dto.Comment)
 		}
 		g.GenStruct(structName)
 	}
-	err = g.SaveFile("res.go")
+	err := g.SaveFile(fileName)
 	if err != nil {
 		fmt.Println("opps", err)
 		return
