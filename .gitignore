@@ -23,5 +23,5 @@ go.work.sum
 
 .idea
 
-./res.go
-./req.go
+res.go
+req.go
