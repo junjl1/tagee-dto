@@ -3,32 +3,36 @@ package fetcher
 import (
 	"encoding/json"
 	"fmt"
-	"io/ioutil"
+	"github.com/junjl1/tagee-dto/types"
+	"io"
 	"net/http"
+	"strings"
 )
 
-func Fetch() {
-	response, err := http.Get("https://apidoc.inshopline.com/api/projectInterface/get?code=947b580d9c07c01497040071c7de2572")
+func Fetch(tageeCode string) (*types.ResponseData, error) {
+	var urlBuilder strings.Builder
+	var url string
+	if tageeCode != "" {
+		// 947b580d9c07c01497040071c7de2572
+		urlBuilder.WriteString("https://apidoc.inshopline.com/api/projectInterface/get?code=")
+		urlBuilder.WriteString(tageeCode)
+		url = urlBuilder.String()
+	} else {
+		return nil, fmt.Errorf("tageeCode is empty")
+	}
+	response, err := http.Get(url)
 	if err != nil {
-		fmt.Println("Error sending request:", err)
-		return
+		return nil, fmt.Errorf("HTTP GET request failed: %w", err)
 	}
 	defer response.Body.Close()
-	body, err := ioutil.ReadAll(response.Body)
+	body, err := io.ReadAll(response.Body)
 	if err != nil {
-		fmt.Println("Error reading response body:", err)
-		return
+		return nil, fmt.Errorf("failed to read response body: %w", err)
 	}
-
-	type Response struct {
-		Code    int    `json:"code"`
-		Message string `json:"message"`
-	}
-	var resp Response
+	var resp *types.Response
 	err = json.Unmarshal(body, &resp)
 	if err != nil {
-		return
+		return nil, fmt.Errorf("JSON unmarshal failed: %w", err)
 	}
-	fmt.Println("Response:", resp)
-	return
+	return &resp.Data, nil
 }
