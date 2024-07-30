@@ -6,8 +6,8 @@ import (
 )
 
 var printCmd = &cobra.Command{
-	Use:   "gen",
-	Short: "gen gen gen",
+	Use:   "gen [number]",
+	Short: "gen dto",
 	Args:  cobra.ExactArgs(1), // 确保传递一个参数
 	Run: func(cmd *cobra.Command, args []string) {
 		str := args[0]
