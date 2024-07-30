@@ -2,7 +2,6 @@ package gen
 
 import (
 	"github.com/dave/jennifer/jen"
-	"strings"
 )
 
 type Field struct {
@@ -15,10 +14,6 @@ type Field struct {
 type Generator struct {
 	f       *jen.File
 	structs map[string][]jen.Code
-}
-
-func (g *Generator) GetF() *jen.File {
-	return g.f
 }
 
 func NewGenerator(pkgName string) *Generator {
@@ -41,13 +36,13 @@ func (g *Generator) GenStruct(structName string) {
 	}
 }
 
-func (g *Generator) AppendField(structName string, fieldName string, fieldType string, comment string) {
+func (g *Generator) AppendField(structName string, fieldName string, jsonName string, fieldType string, comment string) {
 	if _, exists := g.structs[structName]; !exists {
 		g.structs[structName] = []jen.Code{
-			jen.Id(strings.ToUpper(fieldName)).Id(fieldType).Tag(map[string]string{"json": fieldName}).Comment(comment),
+			jen.Id(fieldName).Id(fieldType).Tag(map[string]string{"json": jsonName}).Comment(comment),
 		}
 		return
 	}
 	g.structs[structName] = append(g.structs[structName],
-		jen.Id(strings.ToUpper(fieldName)).Id(fieldType).Tag(map[string]string{"json": fieldName}).Comment(comment))
+		jen.Id(fieldName).Id(fieldType).Tag(map[string]string{"json": jsonName}).Comment(comment))
 }
