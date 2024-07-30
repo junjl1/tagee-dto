@@ -46,7 +46,7 @@ func NewConvertor(tageeName string, tageeType string) *Convertor {
 		_originName:  tageeName,
 		_originType:  tageeType,
 		_goFieldName: tageeName,
-		_goType:      &tageeType,
+		_goType:      nil,
 	}
 
 	if isPascalCase(tageeName) || isCamelCase(tageeName) {
@@ -62,7 +62,8 @@ func NewConvertor(tageeName string, tageeType string) *Convertor {
 	ist.setIsList(tageeType)
 
 	if ist._goType == nil {
-		str := strings.ToUpper(tageeType)
+		parts := strings.Split(tageeType, ".")
+		str := parts[len(parts)-1]
 		ist._goType = &str
 	}
 	return ist
@@ -89,7 +90,8 @@ func (c *Convertor) setIsList(tageeType string) {
 			str := listStr + mapValue
 			c._goType = &str
 		} else {
-			str := ""
+			parts := strings.Split(inner, ".")
+			str := parts[len(parts)-1]
 			if isPascalCase(inner) || isCamelCase(inner) {
 				str = listStr + capitalizeCamelCase(inner)
 			} else {
