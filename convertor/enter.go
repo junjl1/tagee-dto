@@ -92,10 +92,10 @@ func (c *Convertor) setIsList(tageeType string) {
 		} else {
 			parts := strings.Split(inner, ".")
 			str := parts[len(parts)-1]
-			if isPascalCase(inner) || isCamelCase(inner) {
-				str = listStr + capitalizeCamelCase(inner)
+			if isPascalCase(str) || isCamelCase(str) {
+				str = listStr + capitalizeCamelCase(str)
 			} else {
-				str = listStr + toUpperCase(inner)
+				str = listStr + toUpperCase(str)
 			}
 			c._goType = &str
 		}
