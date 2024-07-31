@@ -36,13 +36,19 @@ func (g *Generator) GenStruct(structName string) {
 	}
 }
 
-func (g *Generator) AppendField(structName string, fieldName string, jsonName string, fieldType string, comment string) {
+func (g *Generator) AppendField(structName string, fieldName string, jsonName string, fieldType string, comment string, required int) {
+	var c jen.Code
+	if required == 1 {
+		c = jen.Id(fieldName).Id(fieldType).Tag(map[string]string{"json": jsonName}).Comment(comment)
+	} else {
+		c = jen.Id(fieldName).Op("*").Id(fieldType).Tag(map[string]string{"json": jsonName}).Comment(comment)
+	}
 	if _, exists := g.structs[structName]; !exists {
 		g.structs[structName] = []jen.Code{
-			jen.Id(fieldName).Id(fieldType).Tag(map[string]string{"json": jsonName}).Comment(comment),
+			c,
 		}
 		return
 	}
 	g.structs[structName] = append(g.structs[structName],
-		jen.Id(fieldName).Id(fieldType).Tag(map[string]string{"json": jsonName}).Comment(comment))
+		c)
 }

@@ -28,7 +28,7 @@ func genSubTask(pkgName string, fileName string, data []types.ParamDTO) {
 		structName := parts[len(parts)-1]
 		for _, dto := range data[idx].DetailList {
 			c := convertor.NewConvertor(dto.Name, dto.Type)
-			g.AppendField(structName, c.GetGoFieldName(), dto.Name, c.GetGoType(), dto.Comment)
+			g.AppendField(structName, c.GetGoFieldName(), dto.Name, c.GetGoType(), dto.Comment, dto.Required)
 		}
 		g.GenStruct(structName)
 	}
