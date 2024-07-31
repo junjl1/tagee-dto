@@ -7,7 +7,7 @@ import (
 
 var printCmd = &cobra.Command{
 	Use:   "gen [number]",
-	Short: "gen dto",
+	Short: "generate dto with tagee id, example: tage gen 123",
 	Args:  cobra.ExactArgs(1), // 确保传递一个参数
 	Run: func(cmd *cobra.Command, args []string) {
 		str := args[0]
